@@ -22,14 +22,21 @@ class Platypus < Formula
       s.gsub! "/usr/local", prefix
     end
     
+    xcb_args = [ "-configuration", "Deployment", "ONLY_ACTIVE_ARCH=YES", "SYMROOT=build", "MACOSX_DEPLOYMENT_TARGET=10.6", "GCC_VERSION=com.apple.compilers.llvm.clang.1_0", "GCC_ENABLE_OBJC_EXCEPTIONS=YES" ]
+    if MacOS.version >= :mavericks then
+  	  xcb_args << "SDKROOT=macosx10.8" 
+    else
+  	  xcb_args << "SDKROOT=" 
+    end
+
     # Build main command-line binary, we don't care about the App
-    system "xcodebuild", "-target", "platypus", "-configuration", "Deployment", "ONLY_ACTIVE_ARCH=YES", "SYMROOT=build", "SDKROOT=", "MACOSX_DEPLOYMENT_TARGET=10.6", "GCC_VERSION=com.apple.compilers.llvm.clang.1_0", "GCC_ENABLE_OBJC_EXCEPTIONS=YES"
+    system "xcodebuild", "-target", "platypus", *xcb_args
 
     # Build application sub-binary needed by command-line utility
-    system "xcodebuild", "-target", "ScriptExec", "-configuration", "Deployment", "ONLY_ACTIVE_ARCH=YES", "SYMROOT=build", "SDKROOT=", "MACOSX_DEPLOYMENT_TARGET=10.6", "GCC_VERSION=com.apple.compilers.llvm.clang.1_0", "GCC_ENABLE_OBJC_EXCEPTIONS=YES"
+    system "xcodebuild", "-target", "ScriptExec", *xcb_args
 
     # Build App
-    system "xcodebuild", "-target", "Platypus", "-configuration", "Deployment", "ONLY_ACTIVE_ARCH=YES", "SYMROOT=build", "SDKROOT=", "MACOSX_DEPLOYMENT_TARGET=10.6", "GCC_VERSION=com.apple.compilers.llvm.clang.1_0", "GCC_ENABLE_OBJC_EXCEPTIONS=YES"
+    system "xcodebuild", "-target", "Platypus", *xcb_args
 
     # Install binary and man page
     mv "build/Deployment/platypus_clt", "build/Deployment/platypus"
