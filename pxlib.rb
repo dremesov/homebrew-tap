@@ -5,8 +5,8 @@ require 'formula'
 
 class Pxlib < Formula
   homepage 'http://sourceforge.net/projects/pxlib/'
-  url 'http://downloads.sourceforge.net/project/pxlib/pxlib/0.6.5/pxlib-0.6.5.tar.gz'
-  sha1 '6eacbc663af3e219dc8bdde95faf9aa97384d5e2'
+  url 'https://ayera.dl.sourceforge.net/project/pxlib/pxlib/0.6.5/pxlib-0.6.5.tar.gz'
+  sha256 '2f7a6b77069411d857a1eed75bf9774099c42d35768222314fbeaa5c290a0605'
 
   depends_on 'cmake' => :build
 

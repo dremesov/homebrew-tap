@@ -3,7 +3,7 @@ require 'formula'
 class PlatypusFull < Formula
   url 'https://github.com/sveinbjornt/Platypus/raw/master/Releases/platypus4.8.src.zip'
   version '4.8'
-  sha1 '39d165b9579600cef637b45c70c82307697bb7be'
+  sha256 '97138ae643ffb9f0c501e0e8b4d10aba9473f7193f6a0bcc4931685b05ab067f'
   head 'git://github.com/sveinbjornt/Platypus.git'
   homepage 'http://www.sveinbjorn.org/platypus'
 
