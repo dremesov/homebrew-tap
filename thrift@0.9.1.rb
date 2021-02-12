@@ -20,7 +20,7 @@ class ThriftAT091 < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "boost"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "python@2" => :optional
 
   if build.with? "java"
@@ -204,3 +204,81 @@ index d0dbad9..3345070 100644
  
    TSimpleServer server(processor,
                         serverTransport,
+diff --git a/configure b/configure
+index f69bc0d..fc1bc36 100755
+--- a/configure
++++ b/configure
+@@ -20960,9 +20960,9 @@ fi
+ if test "$have_cpp" = "yes" ; then
+ # mingw toolchain used to build "Thrift Compiler for Windows"
+ # does not support libcrypto, so we just check if we building the cpp library
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for BN_init in -lcrypto" >&5
+-$as_echo_n "checking for BN_init in -lcrypto... " >&6; }
+-if ${ac_cv_lib_crypto_BN_init+:} false; then :
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for BN_new in -lcrypto" >&5
++$as_echo_n "checking for BN_new in -lcrypto... " >&6; }
++if ${ac_cv_lib_crypto_BN_new+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+@@ -20976,27 +20976,27 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ #ifdef __cplusplus
+ extern "C"
+ #endif
+-char BN_init ();
++char BN_new ();
+ int
+ main ()
+ {
+-return BN_init ();
++return BN_new ();
+   ;
+   return 0;
+ }
+ _ACEOF
+ if ac_fn_cxx_try_link "$LINENO"; then :
+-  ac_cv_lib_crypto_BN_init=yes
++  ac_cv_lib_crypto_BN_new=yes
+ else
+-  ac_cv_lib_crypto_BN_init=no
++  ac_cv_lib_crypto_BN_new=no
+ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+ LIBS=$ac_check_lib_save_LIBS
+ fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_BN_init" >&5
+-$as_echo "$ac_cv_lib_crypto_BN_init" >&6; }
+-if test "x$ac_cv_lib_crypto_BN_init" = xyes; then :
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_BN_new" >&5
++$as_echo "$ac_cv_lib_crypto_BN_new" >&6; }
++if test "x$ac_cv_lib_crypto_BN_new" = xyes; then :
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSL_ctrl in -lssl" >&5
+ $as_echo_n "checking for SSL_ctrl in -lssl... " >&6; }
+ if ${ac_cv_lib_ssl_SSL_ctrl+:} false; then :
+diff --git a/configure.ac b/configure.ac
+index 93e1a57..11b7c6a 100755
+--- a/configure.ac
++++ b/configure.ac
+@@ -415,7 +415,7 @@ if test "$have_cpp" = "yes" ; then
+ # mingw toolchain used to build "Thrift Compiler for Windows"
+ # does not support libcrypto, so we just check if we building the cpp library
+ AC_CHECK_LIB(crypto,
+-    BN_init,
++    BN_new,
+     [AC_CHECK_LIB(ssl,
+         SSL_ctrl,
+         [LIBS="-lssl -lcrypto $LIBS"],
+diff --git a/lib/cpp/src/thrift/transport/TSSLSocket.cpp b/lib/cpp/src/thrift/transport/TSSLSocket.cpp
+index 029c541..5ac11db 100644
+--- a/lib/cpp/src/thrift/transport/TSSLSocket.cpp
++++ b/lib/cpp/src/thrift/transport/TSSLSocket.cpp
+@@ -533,7 +533,7 @@ void TSSLSocketFactory::initializeOpenSSL() {
+   SSL_library_init();
+   SSL_load_error_strings();
+   // static locking
+-  mutexes = shared_array<Mutex>(new Mutex[::CRYPTO_num_locks()]);
++  mutexes = shared_array<Mutex>(new Mutex[CRYPTO_num_locks()]);
+   if (mutexes == NULL) {
+     throw TTransportException(TTransportException::INTERNAL_ERROR,
+           "initializeOpenSSL() failed, "
